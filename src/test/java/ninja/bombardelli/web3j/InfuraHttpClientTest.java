@@ -2,12 +2,18 @@ package ninja.bombardelli.web3j;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.web3j.crypto.CipherException;
+import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
@@ -25,6 +31,7 @@ public class InfuraHttpClientTest {
 
 
 	Web3ClientVersion web3ClientVersion;
+
 
 	@Before
 	public void setup() throws IOException {
@@ -54,10 +61,50 @@ public class InfuraHttpClientTest {
 			System.out.println(jrpcr.getResult());
 		});;
 
+	}
 
 
+	@Test
+	public void createNewWalletFile() throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, CipherException {
 
+		Web3j web3j = Web3j.build(new HttpService(
+				"https://ropsten.infura.io/XGZLBI3Y9DR9Ju23ozdP"));
+		
+		System.out.println(String.format("Connected to Ethereum client version: %s ", 
+				web3j.web3ClientVersion().send().getWeb3ClientVersion()));
+		
+		String wallet = WalletUtils.generateNewWalletFile("@abc123", new File(System.getProperty("user.dir")), true);
+		System.out.println(String.format("arquivo em: %s - %s", System.getProperty("user.dir"), wallet));
 
 	}
 
+	
+	@Test
+	public void createFullNewWalletFile() throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, CipherException {
+
+		Web3j web3j = Web3j.build(new HttpService(
+				"https://ropsten.infura.io/XGZLBI3Y9DR9Ju23ozdP"));
+		
+		System.out.println(String.format("Connected to Ethereum client version: %s ", 
+				web3j.web3ClientVersion().send().getWeb3ClientVersion()));
+		
+		String wallet = WalletUtils.generateFullNewWalletFile("@abc123", new File(System.getProperty("user.dir")));
+		System.out.println(String.format("arquivo em: %s - %s", System.getProperty("user.dir"), wallet));
+
+	}
+
+	@Test
+	public void createLightNewWalletFile() throws IOException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, CipherException {
+
+		Web3j web3j = Web3j.build(new HttpService(
+				"https://ropsten.infura.io/XGZLBI3Y9DR9Ju23ozdP"));
+		
+		System.out.println(String.format("Connected to Ethereum client version: %s ", 
+				web3j.web3ClientVersion().send().getWeb3ClientVersion()));
+		
+		String wallet = WalletUtils.generateLightNewWalletFile("@abc123", new File(System.getProperty("user.dir")));
+		System.out.println(String.format("arquivo em: %s - %s", System.getProperty("user.dir"), wallet));
+
+	}
+	
 }
